@@ -1,19 +1,17 @@
-package camera.roll
+package camera.roll.activity
 
 import RandomuserApiRequestHandler
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import camera.roll.permissions.ensurePermission
-import camera.roll.permissions.requestPermissionsHandler
+import camera.roll.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AbstractActivity() {
 
     private val apiService = RandomuserApiRequestHandler()
 
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val view = this.findViewById<TextView>(R.id.main_title)
 
-        ensurePermission(permission = Manifest.permission.INTERNET, activity = this) {
+        withPermission(Manifest.permission.INTERNET) {
             CoroutineScope(Dispatchers.IO).launch {
                 val data = apiService.getData(500)
 
@@ -32,18 +30,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        requestPermissionsHandler(
-            requestCode = requestCode,
-            permissions = permissions,
-            grantResults = grantResults
-        )
     }
 
     companion object {
