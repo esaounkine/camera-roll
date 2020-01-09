@@ -1,34 +1,33 @@
 package camera.roll.activity
 
-import RandomuserApiRequestHandler
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import camera.roll.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import camera.roll.model.PictureItem
+import camera.roll.viewmodel.PictureListViewModel
 
 class MainActivity : AbstractActivity() {
 
-    private val apiService = RandomuserApiRequestHandler()
+    private val textView: TextView by lazy {
+        findViewById<TextView>(R.id.main_title)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val view = this.findViewById<TextView>(R.id.main_title)
 
         withPermission(Manifest.permission.INTERNET) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val data = apiService.getData(500)
-
+            val model = ViewModelProvider(this).get(PictureListViewModel::class.java)
+            model.pictureList.observe(this, Observer<List<PictureItem>> { data ->
                 Log.d(TAG, data.toString())
-                withContext(Dispatchers.Main) {
-                    view.text = data.toString()
-                }
-            }
+
+                textView.text = data.toString()
+            })
+
         }
     }
 

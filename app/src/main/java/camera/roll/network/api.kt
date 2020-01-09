@@ -1,7 +1,8 @@
+package camera.roll.network
+
 import android.util.Log
 import camera.roll.BuildConfig
 import camera.roll.model.PictureItem
-import camera.roll.network.RandomuserResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -39,24 +40,28 @@ class RandomuserApiRequestHandler {
 
     suspend fun getData(results: Int): List<PictureItem> {
         Log.d("API", "Making the request")
-        val data = api.getApi(results = results)
-        Log.d("API", "Received data $data")
-        return withContext(Dispatchers.Default) {
-            transformResponse(data)
+
+        val data = withContext(Dispatchers.IO) {
+            api.getApi(results = results)
         }
+
+        Log.d("API", "Received data $data")
+
+        return transformResponse(data)
     }
 
-    private fun transformResponse(response: RandomuserResponse?): List<PictureItem> {
+    private suspend fun transformResponse(response: RandomuserResponse?): List<PictureItem> {
         Log.d("API", "Transforming data")
         return when (response) {
             null -> listOf()
-            else -> response.results.map { item ->
-                PictureItem(
-                    imageUrl = item.picture.large,
-                    placeholder = "${item.name.first} ${item.name.last}"
-                )
+            else -> withContext(Dispatchers.Default) {
+                response.results.map { item ->
+                    PictureItem(
+                        imageUrl = item.picture.large,
+                        placeholder = "${item.name.first} ${item.name.last}"
+                    )
+                }
             }
         }
     }
-
 }
