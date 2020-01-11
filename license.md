@@ -1,0 +1,1 @@
+The `default_image` picture has been taken from [this website](https://eliquate.com/diamonds-and-gold-produced-by-daniel-hoffman/)

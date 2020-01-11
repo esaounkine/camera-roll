@@ -13,7 +13,7 @@ class GalleryViewModel : ViewModel() {
     val pictureList: LiveData<List<PictureItem>> = fetchData()
 
     private fun fetchData(): LiveData<List<PictureItem>> = liveData {
-        val data = apiService.getData(5000)
+        val data = apiService.getData(500)
         emit(data)
     }
 
