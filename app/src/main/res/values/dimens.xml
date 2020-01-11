@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <dimen name="global_spacing_margin">15dp</dimen>
+    <dimen name="global_spacing_margin">16dp</dimen>
+
+    <dimen name="gallery_max_image_width">150dp</dimen>
 </resources>

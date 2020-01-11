@@ -2,17 +2,10 @@ package camera.roll.activity
 
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import camera.roll.R
-import camera.roll.model.PictureItem
-import camera.roll.viewmodel.PictureListViewModel
+import camera.roll.ui.GalleryFragment
 
 class MainActivity : AbstractActivity(R.id.main_container) {
-
-    private val pictureListModel by lazy {
-        ViewModelProvider(this).get(PictureListViewModel::class.java)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,11 +13,9 @@ class MainActivity : AbstractActivity(R.id.main_container) {
         setContentView(R.layout.activity_main)
 
         withPermissions {
-            pictureListModel.pictureList.observe(this, Observer<List<PictureItem>> { data ->
-                Log.d(TAG, data.toString())
+            Log.d(TAG, "Secured permissions, loading the gallery fragment")
 
-
-            })
+            loadFragment(GalleryFragment())
         }
     }
 
