@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Camera roll</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
+    <string name="grant_permissions_text">For this application to function properly, grant the permissions that will be requested (INTERNET)</string>
+    <string name="grant_permissions_button">Grant permissions</string>
+    <string name="missing_permissions_text">This application will not be able to function without the minimum set of permissions (INTERNET)</string>
 </resources>

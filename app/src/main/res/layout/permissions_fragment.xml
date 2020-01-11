@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/grant_permission_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/global_spacing_margin"
+            android:layout_marginRight="@dimen/global_spacing_margin"
+            android:text="@string/grant_permissions_text"
+            android:textAlignment="center" />
+
+    <Button
+            android:id="@+id/grant_permissions_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/global_spacing_margin"
+            android:text="@string/grant_permissions_button" />
+</LinearLayout>
