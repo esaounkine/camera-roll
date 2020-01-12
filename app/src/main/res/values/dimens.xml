@@ -3,6 +3,6 @@
 <resources>
     <dimen name="global_spacing_margin">16dp</dimen>
 
-    <dimen name="gallery_max_image_width">150dp</dimen>
-    <dimen name="gallery_max_image_height">150dp</dimen>
+    <dimen name="gallery_max_image_width">50dp</dimen>
+    <dimen name="gallery_max_image_height">50dp</dimen>
 </resources>
