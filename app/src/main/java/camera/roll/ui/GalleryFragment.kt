@@ -1,17 +1,14 @@
 package camera.roll.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import camera.roll.R
 import camera.roll.adapter.PictureListAdapter
-import camera.roll.model.PictureItem
 import camera.roll.viewmodel.GalleryViewModel
 
 class GalleryFragment : AbstractFragment() {
@@ -20,8 +17,9 @@ class GalleryFragment : AbstractFragment() {
         ViewModelProvider(this).get(GalleryViewModel::class.java)
     }
 
-    private val pictureListAdapter: PictureListAdapter =
-        PictureListAdapter(emptyList())
+    private val pictureListAdapter: PictureListAdapter by lazy {
+        PictureListAdapter(this, model)
+    }
 
     private val viewManager by lazy {
         LinearLayoutManager(activity)
@@ -42,11 +40,6 @@ class GalleryFragment : AbstractFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        model.pictureList.observe(this, Observer<List<PictureItem>> { data ->
-            Log.d(TAG, "Refreshing data in the adapter")
-            pictureListAdapter.refreshData(data)
-        })
 
         galleryRecyclerView.apply {
             adapter = pictureListAdapter

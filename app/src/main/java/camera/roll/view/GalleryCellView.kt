@@ -5,16 +5,18 @@ import android.util.Log
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import camera.roll.R
-import camera.roll.adapter.PictureListAdapter
-import camera.roll.model.LoadingException
-import camera.roll.network.loadBitmapFromUrl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import camera.roll.viewmodel.GalleryViewModel
 
-class GalleryCellView(context: Context) : ImageView(context) {
+class GalleryCellView(
+    context: Context,
+    private val lifecycleOwner: LifecycleOwner,
+    private val viewModel: GalleryViewModel
+) : ImageView(context) {
+
+    private var currentImageUrl: String? = null
 
     private fun createLayoutParams(): ViewGroup.LayoutParams {
         val params = ViewGroup.MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT)
@@ -31,20 +33,39 @@ class GalleryCellView(context: Context) : ImageView(context) {
 
     init {
         layoutParams = createLayoutParams()
+        reset()
+    }
+
+    private fun reset() {
+        setImageResource(R.drawable.default_image)
     }
 
     fun loadUrl(imageUrl: String) {
-        setImageResource(R.drawable.default_image)
-        GlobalScope.launch {
-            try {
-                val bitmap = loadBitmapFromUrl(imageUrl)
-
-                withContext(Dispatchers.Main) {
-                    setImageBitmap(bitmap)
-                }
-            } catch (e: LoadingException) {
-                Log.e(PictureListAdapter.TAG, "Leaving the default picture...")
-            }
+        if (currentImageUrl == imageUrl) {
+            Log.d(TAG, "The view is already loaded from $imageUrl, skipping...")
         }
+
+        currentImageUrl = imageUrl
+        reset()
+
+        //TODO find a way to cancel unfinished jobs
+        viewModel.getImageFromCache(imageUrl).observe(lifecycleOwner, Observer { bitmap ->
+            if (bitmap != null) {
+                if (currentImageUrl == imageUrl) {
+                    setImageBitmap(bitmap)
+                } else {
+                    Log.d(
+                        TAG,
+                        "The cell view has moved on ($currentImageUrl != $imageUrl), skipping..."
+                    )
+                }
+            }
+        })
+
+
+    }
+
+    companion object {
+        val TAG = GalleryCellView::class.java.simpleName
     }
 }
